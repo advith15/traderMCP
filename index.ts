@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { placeOrder } from "./trade";
+import { getPortfolio, placeOrder } from "./trade";
 
 // Create an MCP server
 const server = new McpServer({
@@ -50,6 +50,15 @@ server.tool("sell-stock", "the stock has been sold for the user on the zerodha p
         }
     }
 );
+
+server.tool("show-portfolio", "displays the portfolio of the user on the zerodha exchange platform",
+    {},
+    async()=>{
+        return{
+            content: [{type: "text", text: await getPortfolio()}]
+        }
+    }
+)
 
 const transport = new StdioServerTransport();
 await server.connect(transport);

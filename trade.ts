@@ -8,11 +8,11 @@ let accessToken = process.env.ACCESS_TOKEN as string;
 // const apiSecret = process.env.API_SECRET as string;
 
 const kc = new KiteConnect({ api_key: apiKey });
+kc.setAccessToken(accessToken);
 
 //console.log(kc.getLoginURL()); //login url to get the request token 
 
 export async function placeOrder(tradingsymbol: string, quantity: number, type: "BUY" | "SELL") {
-    kc.setAccessToken(accessToken);
     // const response = await kc.generateSession(requestToken, apiSecret);
     // console.log(response.access_token);
     try {
@@ -28,4 +28,14 @@ export async function placeOrder(tradingsymbol: string, quantity: number, type: 
         console.error(err);
       }
 }
+
+export async function getPortfolio(){
+    const holdings = await kc.getHoldings();
+    let allHoldings = ""
+    holdings.map(holding=>{
+        allHoldings+= `stock: ${holding.tradingsymbol}, quantity: ${holding.quantity}, price: ${holding.last_price}`
+    })
+    return allHoldings;
+}
+
 
